@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Registered Students</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+
+<div class="container">
+
+<a class="navbar-brand fw-bold" href="/">
+🎓 Student Management System
+</a>
+
+<button class="navbar-toggler"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#navbarNav">
+
+<span class="navbar-toggler-icon"></span>
+
+</button>
+
+<div class="collapse navbar-collapse" id="navbarNav">
+
+<ul class="navbar-nav ms-auto">
+
+<li class="nav-item">
+<a class="nav-link" href="/">Register</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link active fw-bold" href="/students">
+Students
+</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</nav>
+
+<div class="container my-5">
+
+<div class="card shadow-lg border-0 rounded-4">
+
+<div class="card-body">
+
+<h2 class="text-center mb-4">
+📋 Registered Students
+</h2>
+
+<div class="row mb-4">
+
+<div class="col-md-6">
+
+<div class="alert alert-primary">
+
+<h5>👨‍🎓 Total Students</h5>
+
+<h3 id="totalStudents">0</h3>
+
+</div>
+
+</div>
+
+<div class="col-md-6">
+
+<input
+type="text"
+id="searchInput"
+class="form-control"
+placeholder="🔍 Search Student">
+
+</div>
+
+</div>
+
+<div class="table-responsive">
+
+<table class="table table-bordered table-hover">
+
+<thead class="table-primary">
+
+<thead class="table-primary">
+<tr>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Phone</th>
+    <th>Age</th>
+    <th>Gender</th>
+    <th>Qualification</th>
+    <th>Course</th>
+    <th>Subject</th>
+    <th>Address</th>
+    <th>Skills</th>
+    <th>Edit</th>
+    <th>Delete</th>
+</tr>
+</thead>
+
+</thead>
+
+<tbody id="studentTableBody">
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="text-center mt-4">
+
+<a href="/" class="btn btn-success">
+Register New Student
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<footer class="bg-dark text-white text-center py-3">
+
+© 2026 Student Management System
+
+</footer>
+
+<script>
+
+async function loadStudents() {
+
+    try {
+
+        const response = await fetch("/api/students");
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch students");
+        }
+
+        const students = await response.json();
+
+        console.log(students);
+
+        document.getElementById("totalStudents").innerText = students.length;
+
+        const tbody = document.getElementById("studentTableBody");
+
+        tbody.innerHTML = "";
+
+        students.forEach(student => {
+
+            const skills = Array.isArray(student.skills)
+                ? student.skills.join(", ")
+                : "";
+
+          tbody.innerHTML += `
+<tr>
+    <td>${student.name}</td>
+    <td>${student.email}</td>
+    <td>${student.phone}</td>
+    <td>${student.age}</td>
+    <td>${student.gender}</td>
+    <td>${student.qualification}</td>
+    <td>${student.course}</td>
+    <td>${student.subject}</td>
+    <td>${student.address}</td>
+    <td>${skills}</td>
+
+<td>
+    <a href="/edit/${student._id}" class="btn btn-warning btn-sm">
+        Edit
+    </a>
+</td>
+
+<td>
+    <button class="btn btn-danger btn-sm"
+        onclick="deleteStudent('${student._id}')">
+        Delete
+    </button>
+</td>
+
+</tr>
+`;
+        });
+
+    } catch (error) {
+
+        console.error(error);
+        alert("Unable to load students.");
+
+    }
+
+}
+
+loadStudents();
+
+async function deleteStudent(id) {
+
+    if (!confirm("Delete this student?")) return;
+
+    const response = await fetch(`/api/students/${id}`, {
+        method: "DELETE"
+    });
+
+    if (response.ok) {
+        alert("Student deleted successfully.");
+        loadStudents();
+    } else {
+        alert("Delete failed.");
+    }
+
+}
+
+async function editStudent(id, currentName) {
+
+    const newName = prompt("Enter new name:", currentName);
+
+    if (!newName) return;
+
+    const response = await fetch(`/api/students/${id}`, {
+
+        method: "PUT",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+            name: newName
+        })
+
+    });
+
+    if (response.ok) {
+        alert("Student updated successfully.");
+        loadStudents();
+    } else {
+        alert("Update failed.");
+    }
+
+}
+
+// Search functionality
+const searchInput = document.getElementById("searchInput");
+
+searchInput.addEventListener("input", function () {
+
+    const value = this.value.toLowerCase();
+
+    const rows = document.querySelectorAll("#studentTableBody tr");
+
+    rows.forEach(row => {
+
+        const text = row.textContent.toLowerCase();
+
+        if (text.includes(value)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+
+    });
+
+});
+
+</script>
+
+<script src="/script.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

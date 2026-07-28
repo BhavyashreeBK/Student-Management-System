@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Student</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<!-- Navbar -->
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+    <div class="container">
+
+        <a class="navbar-brand fw-bold" href="/">
+            🎓 Student Management System
+        </a>
+
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Register</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="/students">Students</a>
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+</nav>
+
+<!-- Form -->
+
+<div class="container my-5">
+
+<div class="card shadow-lg border-0 rounded-4">
+
+<div class="card-body p-5">
+
+<h2 class="text-center mb-4">
+✏️ Edit Student
+</h2>
+
+<form id="editForm">
+
+<h4 class="mb-3">Personal Details</h4>
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+
+<input
+type="text"
+class="form-control"
+name="name"
+value="<%= student.name %>"
+placeholder="Student Name"
+required>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<input
+type="email"
+class="form-control"
+name="email"
+value="<%= student.email %>"
+placeholder="Email"
+required>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<input
+type="tel"
+class="form-control"
+name="phone"
+value="<%= student.phone %>"
+placeholder="Phone Number"
+required>
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<input
+type="number"
+class="form-control"
+name="age"
+value="<%= student.age %>"
+placeholder="Age"
+required>
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="col-md-12 mb-3">
+
+<label class="form-label fw-bold">Password</label>
+
+<input
+type="text"
+class="form-control"
+name="password"
+value="<%= student.password %>"
+required>
+
+</div>
+
+</div>
+
+<!-- Gender -->
+
+<div class="mb-4">
+
+<label class="form-label fw-bold">Gender</label>
+
+<div>
+
+<div class="form-check form-check-inline">
+
+<input
+class="form-check-input"
+type="radio"
+name="gender"
+value="Male"
+<%= student.gender === "Male" ? "checked" : "" %>>
+
+<label class="form-check-label">Male</label>
+
+</div>
+
+<div class="form-check form-check-inline">
+
+<input
+class="form-check-input"
+type="radio"
+name="gender"
+value="Female"
+<%= student.gender === "Female" ? "checked" : "" %>>
+
+<label class="form-check-label">Female</label>
+
+</div>
+
+<div class="form-check form-check-inline">
+
+<input
+class="form-check-input"
+type="radio"
+name="gender"
+value="Other"
+<%= student.gender === "Other" ? "checked" : "" %>>
+
+<label class="form-check-label">Other</label>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- Address -->
+
+<textarea
+class="form-control"
+name="address"
+rows="4"><%= student.address %></textarea>
+
+<hr>
+
+<h4 class="mb-3">Academic Details</h4>
+
+<div class="row">
+
+<div class="col-md-4 mb-3">
+
+<select
+class="form-select"
+name="qualification">
+
+<option value="SSLC"
+<%= student.qualification==="SSLC" ? "selected" : "" %>>
+SSLC
+</option>
+
+<option value="PUC"
+<%= student.qualification==="PUC" ? "selected" : "" %>>
+PUC
+</option>
+
+<option value="Diploma"
+<%= student.qualification==="Diploma" ? "selected" : "" %>>
+Diploma
+</option>
+
+<option value="Degree"
+<%= student.qualification==="Degree" ? "selected" : "" %>>
+Degree
+</option>
+
+</select>
+
+</div>
+
+<div class="col-md-4 mb-3">
+
+<select
+class="form-select"
+name="course">
+
+<option value="BE - Computer Science"
+<%= student.course==="BE - Computer Science" ? "selected" : "" %>>
+BE - Computer Science
+</option>
+
+<option value="BE - Information Science"
+<%= student.course==="BE - Information Science" ? "selected" : "" %>>
+BE - Information Science
+</option>
+
+<option value="BCA"
+<%= student.course==="BCA" ? "selected" : "" %>>
+BCA
+</option>
+
+<option value="BSc"
+<%= student.course==="BSc" ? "selected" : "" %>>
+BSc
+</option>
+
+</select>
+
+</div>
+
+<div class="col-md-4 mb-3">
+
+<select
+class="form-select"
+name="subject">
+
+<option value="Web Development"
+<%= student.subject==="Web Development" ? "selected" : "" %>>
+Web Development
+</option>
+
+<option value="Java"
+<%= student.subject==="Java" ? "selected" : "" %>>
+Java
+</option>
+
+<option value="Python"
+<%= student.subject==="Python" ? "selected" : "" %>>
+Python
+</option>
+
+<option value="Data Science"
+<%= student.subject==="Data Science" ? "selected" : "" %>>
+Data Science
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+<hr>
+
+<h4 class="mb-3">Skills</h4>
+
+<div class="mb-4">
+    <div class="form-check form-check-inline">
+    <input
+        class="form-check-input"
+        type="checkbox"
+        name="skills"
+        value="HTML"
+        <%= student.skills && student.skills.includes("HTML") ? "checked" : "" %>>
+    <label class="form-check-label">HTML</label>
+</div>
+
+<div class="form-check form-check-inline">
+    <input
+        class="form-check-input"
+        type="checkbox"
+        name="skills"
+        value="CSS"
+        <%= student.skills && student.skills.includes("CSS") ? "checked" : "" %>>
+    <label class="form-check-label">CSS</label>
+</div>
+
+<div class="form-check form-check-inline">
+    <input
+        class="form-check-input"
+        type="checkbox"
+        name="skills"
+        value="JavaScript"
+        <%= student.skills && student.skills.includes("JavaScript") ? "checked" : "" %>>
+    <label class="form-check-label">JavaScript</label>
+</div>
+
+<div class="form-check form-check-inline">
+    <input
+        class="form-check-input"
+        type="checkbox"
+        name="skills"
+        value="React"
+        <%= student.skills && student.skills.includes("React") ? "checked" : "" %>>
+    <label class="form-check-label">React</label>
+</div>
+
+<div class="form-check form-check-inline">
+    <input
+        class="form-check-input"
+        type="checkbox"
+        name="skills"
+        value="Node.js"
+        <%= student.skills && student.skills.includes("Node.js") ? "checked" : "" %>>
+    <label class="form-check-label">Node.js</label>
+</div>
+
+<div class="form-check form-check-inline">
+    <input
+        class="form-check-input"
+        type="checkbox"
+        name="skills"
+        value="MongoDB"
+        <%= student.skills && student.skills.includes("MongoDB") ? "checked" : "" %>>
+    <label class="form-check-label">MongoDB</label>
+</div>
+
+</div>
+
+<div class="text-center">
+
+    <button
+        type="submit"
+        class="btn btn-primary btn-lg px-5">
+        Update Student
+    </button>
+
+    <a href="/students"
+       class="btn btn-secondary btn-lg ms-2">
+        Cancel
+    </a>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+<footer class="bg-dark text-white text-center py-3">
+    © 2026 Student Management System
+</footer>
+
+<script>
+
+const form = document.getElementById("editForm");
+
+form.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    const formData = new FormData(form);
+
+    const data = {
+        name: formData.get("name"),
+        email: formData.get("email"),
+        phone: formData.get("phone"),
+        age: formData.get("age"),
+        password: formData.get("password"),
+        gender: formData.get("gender"),
+        address: formData.get("address"),
+        qualification: formData.get("qualification"),
+        course: formData.get("course"),
+        subject: formData.get("subject"),
+        skills: formData.getAll("skills")
+    };
+
+    try {
+
+        const response = await fetch("/api/students/<%= student._id %>", {
+
+            method: "PUT",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(data)
+
+        });
+
+        if(response.ok){
+
+            alert("Student updated successfully!");
+
+            window.location.href="/students";
+
+        }else{
+
+            const result = await response.json();
+            alert(result.message || "Update failed.");
+
+        }
+
+    } catch(error){
+
+        console.error(error);
+        alert("Something went wrong.");
+
+    }
+
+});
+
+</script>
+
+<script src="/script.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
