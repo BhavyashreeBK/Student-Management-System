@@ -1,6 +1,6 @@
-// ==============================
+// =======================================
 // Required Packages
-// ==============================
+// =======================================
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -9,16 +9,16 @@ const rateLimit = require("express-rate-limit");
 
 const Student = require("./models/Student");
 
-// ==============================
+// =======================================
 // App Configuration
-// ==============================
+// =======================================
 
 const app = express();
 const PORT = 3001;
 
-// ==============================
+// =======================================
 // MongoDB Connection
-// ==============================
+// =======================================
 
 mongoose.connect("mongodb://127.0.0.1:27017/studentDB")
 
@@ -36,9 +36,9 @@ mongoose.connect("mongodb://127.0.0.1:27017/studentDB")
 
 });
 
-// ==============================
+// =======================================
 // Middleware
-// ==============================
+// =======================================
 
 app.use(express.urlencoded({ extended: true }));
 
@@ -46,32 +46,28 @@ app.use(express.json());
 
 app.use(express.static("public"));
 
-// ==============================
-// Logging Middleware (Task 8)
-// ==============================
+// =======================================
+// Request Logging Middleware (Task 8)
+// =======================================
 
 app.use((req, res, next) => {
 
     const currentTime = new Date().toLocaleString();
 
-    console.log(
-
-        `[${currentTime}] ${req.method} ${req.url}`
-
-    );
+    console.log(`[${currentTime}] ${req.method} ${req.url}`);
 
     next();
 
 });
 
-// ==============================
+// =======================================
 // View Engine
-// ==============================
+// =======================================
 
 app.set("view engine", "ejs");
-// ==============================
+// =======================================
 // Rate Limiter (Task 7)
-// ==============================
+// =======================================
 
 const apiLimiter = rateLimit({
 
@@ -80,6 +76,8 @@ const apiLimiter = rateLimit({
     max: 100,
 
     message: {
+
+        success: false,
 
         message: "Too many requests. Please try again later."
 
@@ -91,13 +89,13 @@ const apiLimiter = rateLimit({
 
 });
 
-// Apply limiter to all API routes
+// Apply Rate Limiter to all API routes
 
 app.use("/api", apiLimiter);
 
-// ==============================
+// =======================================
 // Pages
-// ==============================
+// =======================================
 
 // Home Page
 
@@ -123,24 +121,28 @@ app.get("/about", (req, res) => {
 
 });
 
-// ==============================
+// =======================================
 // Test Routes
-// ==============================
+// =======================================
+
+// Test Route
 
 app.get("/test", (req, res) => {
 
-    res.send("✅ Test route is working");
+    res.send("✅ Test route is working.");
 
 });
+
+// Hello Route
 
 app.get("/hello", (req, res) => {
 
-    res.send("Hello from Express Server!");
+    res.send("👋 Hello from Express Server!");
 
 });
-// ==============================
+// =======================================
 // Register Student
-// ==============================
+// =======================================
 
 app.post("/submit", async (req, res) => {
 
@@ -162,9 +164,9 @@ app.post("/submit", async (req, res) => {
 
         } = req.body;
 
-        // ======================
+        // =======================================
         // Server-side Validation
-        // ======================
+        // =======================================
 
         if (!name || name.trim().length < 3) {
 
@@ -184,15 +186,15 @@ app.post("/submit", async (req, res) => {
 
         }
 
-        if (age < 16 || age > 100) {
+        if (!age || age < 16 || age > 100) {
 
             return res.send("Age must be between 16 and 100.");
 
         }
 
-        // ======================
-        // Save Student
-        // ======================
+        // =======================================
+        // Create Student
+        // =======================================
 
         const student = new Student({
 
@@ -211,12 +213,12 @@ app.post("/submit", async (req, res) => {
         });
 
         await student.save();
-       clearStudentCache();
-        console.log("✅ Student Registered:", student.name);
 
-        // ======================
+        console.log("✅ Student Registered Successfully");
+
+        // =======================================
         // Success Page
-        // ======================
+        // =======================================
 
         res.render("success", {
 
@@ -245,9 +247,9 @@ app.post("/submit", async (req, res) => {
     }
 
 });
-// ==============================
+// =======================================
 // Edit Student Page
-// ==============================
+// =======================================
 
 app.get("/edit/:id", async (req, res) => {
 
@@ -267,7 +269,9 @@ app.get("/edit/:id", async (req, res) => {
 
         });
 
-    } catch (err) {
+    }
+
+    catch (err) {
 
         console.log(err);
 
@@ -277,9 +281,9 @@ app.get("/edit/:id", async (req, res) => {
 
 });
 
-// ==============================
+// =======================================
 // REST API
-// ==============================
+// =======================================
 
 // Get All Students
 
@@ -291,11 +295,15 @@ app.get("/api/students", async (req, res) => {
 
         res.status(200).json(students);
 
-    } catch (err) {
+    }
+
+    catch (err) {
 
         console.log(err);
 
         res.status(500).json({
+
+            success: false,
 
             message: "Error fetching students."
 
@@ -305,9 +313,9 @@ app.get("/api/students", async (req, res) => {
 
 });
 
-// ==============================
+// =======================================
 // Get Student By ID
-// ==============================
+// =======================================
 
 app.get("/api/students/:id", async (req, res) => {
 
@@ -319,6 +327,8 @@ app.get("/api/students/:id", async (req, res) => {
 
             return res.status(404).json({
 
+                success: false,
+
                 message: "Student not found."
 
             });
@@ -327,11 +337,15 @@ app.get("/api/students/:id", async (req, res) => {
 
         res.status(200).json(student);
 
-    } catch (err) {
+    }
+
+    catch (err) {
 
         console.log(err);
 
         res.status(500).json({
+
+            success: false,
 
             message: "Error fetching student."
 
@@ -340,9 +354,9 @@ app.get("/api/students/:id", async (req, res) => {
     }
 
 });
-// ==============================
+// =======================================
 // Add Student API
-// ==============================
+// =======================================
 
 app.post("/api/students", async (req, res) => {
 
@@ -365,7 +379,7 @@ app.post("/api/students", async (req, res) => {
         });
 
         await student.save();
-
+       clearStudentCache();
         res.status(201).json({
 
             success: true,
@@ -376,7 +390,9 @@ app.post("/api/students", async (req, res) => {
 
         });
 
-    } catch (err) {
+    }
+
+    catch (err) {
 
         console.log(err);
 
@@ -392,9 +408,9 @@ app.post("/api/students", async (req, res) => {
 
 });
 
-// ==============================
+// =======================================
 // Update Student API
-// ==============================
+// =======================================
 
 app.put("/api/students/:id", async (req, res) => {
 
@@ -423,7 +439,6 @@ app.put("/api/students/:id", async (req, res) => {
             {
 
                 new: true,
-
                 runValidators: true
 
             }
@@ -442,6 +457,7 @@ app.put("/api/students/:id", async (req, res) => {
 
         }
         clearStudentCache();
+
         res.status(200).json({
 
             success: true,
@@ -452,7 +468,9 @@ app.put("/api/students/:id", async (req, res) => {
 
         });
 
-    } catch (err) {
+    }
+
+    catch (err) {
 
         console.log(err);
 
@@ -467,9 +485,9 @@ app.put("/api/students/:id", async (req, res) => {
     }
 
 });
-// ==============================
+// =======================================
 // Delete Student API
-// ==============================
+// =======================================
 
 app.delete("/api/students/:id", async (req, res) => {
 
@@ -488,7 +506,8 @@ app.delete("/api/students/:id", async (req, res) => {
             });
 
         }
-         clearStudentCache();
+        clearStudentCache();
+
         res.status(200).json({
 
             success: true,
@@ -497,7 +516,9 @@ app.delete("/api/students/:id", async (req, res) => {
 
         });
 
-    } catch (err) {
+    }
+
+    catch (err) {
 
         console.log(err);
 
@@ -513,10 +534,10 @@ app.delete("/api/students/:id", async (req, res) => {
 
 });
 
-// ==============================
-// External API
+// =======================================
+// External API Integration
 // Task 7
-// ==============================
+// =======================================
 
 app.get("/api/sample-student", async (req, res) => {
 
@@ -527,6 +548,8 @@ app.get("/api/sample-student", async (req, res) => {
         const user = response.data.results[0];
 
         res.json({
+
+            success: true,
 
             name: `${user.name.first} ${user.name.last}`,
 
@@ -540,7 +563,9 @@ app.get("/api/sample-student", async (req, res) => {
 
         });
 
-    } catch (err) {
+    }
+
+    catch (err) {
 
         console.log(err);
 
@@ -555,11 +580,11 @@ app.get("/api/sample-student", async (req, res) => {
     }
 
 });
-// ==============================
+// =======================================
 // Task 8 - Background Task
-// ==============================
+// =======================================
 
-// Background task runs every 30 seconds
+// Runs every 30 seconds
 
 setInterval(async () => {
 
@@ -567,13 +592,15 @@ setInterval(async () => {
 
         const totalStudents = await Student.countDocuments();
 
-        console.log("----------------------------------------");
+        console.log("======================================");
         console.log("📌 Background Task Running...");
         console.log(`👨‍🎓 Total Students : ${totalStudents}`);
         console.log(`🕒 Time : ${new Date().toLocaleString()}`);
-        console.log("----------------------------------------");
+        console.log("======================================");
 
-    } catch (err) {
+    }
+
+    catch (err) {
 
         console.log("Background Task Error");
 
@@ -584,11 +611,9 @@ setInterval(async () => {
 }, 30000);
 
 
-// ==============================
-// Task 8 - Server Cache
-// ==============================
-
-// Simple in-memory cache
+// =======================================
+// Task 8 - Server-side Cache
+// =======================================
 
 let studentCache = null;
 
@@ -597,7 +622,22 @@ let cacheTime = null;
 const CACHE_DURATION = 30000; // 30 Seconds
 
 
-// Cached API
+// Clear Cache Function
+
+function clearStudentCache() {
+
+    studentCache = null;
+
+    cacheTime = null;
+
+    console.log("🗑️ Student Cache Cleared");
+
+}
+
+
+// =======================================
+// Cached Students API
+// =======================================
 
 app.get("/api/cache/students", async (req, res) => {
 
@@ -615,7 +655,7 @@ app.get("/api/cache/students", async (req, res) => {
 
         ) {
 
-            console.log("📦 Returning Cached Data");
+            console.log("📦 Returning Students From Cache");
 
             return res.json({
 
@@ -664,21 +704,9 @@ app.get("/api/cache/students", async (req, res) => {
     }
 
 });
-// ==============================
-// Task 8 - Clear Cache Function
-// ==============================
-
-function clearStudentCache() {
-
-    studentCache = null;
-    cacheTime = null;
-
-    console.log("🗑️ Student Cache Cleared");
-
-}
-// ==============================
+// =======================================
 // 404 Handler
-// ==============================
+// =======================================
 
 app.use((req, res) => {
 
@@ -691,15 +719,16 @@ app.use((req, res) => {
     });
 
 });
-// ==============================
+
+// =======================================
 // Global Error Handler
-// ==============================
+// =======================================
 
 app.use((err, req, res, next) => {
 
-    console.error("Global Error:");
-
+    console.error("========== SERVER ERROR ==========");
     console.error(err.stack);
+    console.error("==================================");
 
     res.status(500).json({
 
@@ -710,10 +739,9 @@ app.use((err, req, res, next) => {
     });
 
 });
-
-// ==============================
-// Server Start
-// ==============================
+// =======================================
+// Start Server
+// =======================================
 
 app.listen(PORT, () => {
 
